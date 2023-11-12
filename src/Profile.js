@@ -2,8 +2,8 @@ const Profile = () => {
     return (
         <div className="text-center">
             <h1 >Welcome!!!</h1>
-            <b>{sessionStorage.email}</b><br/>  
-            <b>{sessionStorage.jwttoken}</b>
+            <b>{localStorage.email}</b><br/>  
+            <b>{localStorage.jwttoken}</b>
         </div>
     );
 }

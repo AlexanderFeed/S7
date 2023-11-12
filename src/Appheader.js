@@ -15,7 +15,7 @@ const Appheader = () => {
             }
             else{
             showmenuupdateupdate(true);
-            let username = sessionStorage.getItem('email');
+            let username = localStorage.getItem('email');
             if (username === '' || username === null) {
                 usenavigate('/login');
             } else {

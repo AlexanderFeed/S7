@@ -4,42 +4,61 @@ import { toast } from "react-toastify";
 
 const User = () => {
     const [custlist, custupdate] = useState([]);
-    const [haveview, viewchange] = useState(true);
     const [haveadd, addchange] = useState(true);
     const [haveremove, removechange] = useState(true);
+    const [id, idupdate] = useState('');
+    const [first_name, firstnameupdate] = useState('');
+    const [last_name, lastnameupdate] = useState('');
+    const [email, emailupdate] = useState('');
+    const [avatar, avatarupdate] = useState('');
 
     const navigate=useNavigate();
 
 
     useEffect(() => {
-        loadcustomer();
-       
+       loadcustomer()
     }, []);
 
     const loadcustomer = () => {
         fetch("https://reqres.in/api/users")
         .then(res => {
             return res.json();
-        }).then(res => {
+        })
+        .then(res =>{
+            if(localStorage.getItem('users') === null){
+                localStorage.setItem('users', JSON.stringify(res.data))
             custupdate(res.data)
-            console.log(custlist)
-        });
+            }
+        })
     }
-
 
     const handleadd = () => {
         if(haveadd){
-        toast.success('added')
-        }else{
-            toast.warning('You are not having access for add');
+        let a = (JSON.parse(localStorage.getItem('users')));
+        a.push({
+            'id':id,
+            'email':email,
+        'first_name':first_name,
+        'last_name': last_name,
+        'avatar':avatar})
+        localStorage.setItem('users', JSON.stringify(a))
+        custupdate(a)
+        toast.success('Added')
         }
     }
 
-    const handleremove = () => {
+    const handleremove = (e, i)=> {
+        e.preventDefault();
         if(haveremove){
-        toast.success('removed')
-        }else{
-            toast.warning('You are not having access for remove');
+            let list = (JSON.parse(localStorage.getItem('users')));
+            list.filter((a,g)=>{
+                if(i===a.id){
+                    list.splice(g,1)
+                    localStorage.setItem('users', JSON.stringify(list))
+                    custupdate(list)
+                    toast.success('Removed')
+                }
+            })
         }
     }
 
@@ -52,6 +71,16 @@ const User = () => {
                     <h3>Users Listing</h3>
                 </div>
                 <div className="card-body">
+                <label>ID</label>
+                <input value={id} onChange={e => idupdate(e.target.value)} className="form-control"></input>
+                <label>First Name</label>
+                <input value={first_name} onChange={e => firstnameupdate(e.target.value)} className="form-control"></input>
+                <label>Last Name </label>
+                <input value={last_name} onChange={e => lastnameupdate(e.target.value)} className="form-control"></input>
+                <label>Email </label>
+                <input value={email} onChange={e => emailupdate(e.target.value)} className="form-control"></input>
+                <label>Avatar(URL)</label>
+                <input value={avatar} onChange={e => avatarupdate(e.target.value)} className="form-control"></input>
                     <button onClick={handleadd} className="btn btn-success">Add (+)</button>
                     <br></br>
                     <table className="table table-bordered">
@@ -66,8 +95,8 @@ const User = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {custlist &&
-                                custlist.map(item => (
+                            {localStorage.getItem('users') &&
+                                JSON.parse(localStorage.getItem('users')).map(item => (
                                     <tr key={item.id}>
                                         <td>{item.id}</td>
                                         <td>{item.first_name}</td>
@@ -75,9 +104,8 @@ const User = () => {
                                         <td>{item.email}</td>
                                         <td><img src={item.avatar} alt="avatar"></img></td>
                                         <td>
-                                            <button onClick={handleremove} className="btn btn-danger">Remove</button>
+                                            <button onClick={(e)=>handleremove(e,item.id)} className="btn btn-danger">Remove</button>
                                         </td>
-
                                     </tr>
                                 ))
                             }

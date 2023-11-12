@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "./features/userSlice";
 
 const Login = () => {
     const [username, usernameupdate] = useState('');
@@ -9,11 +11,33 @@ const Login = () => {
     const usenavigate=useNavigate();
 
     useEffect(()=>{
-    sessionStorage.clear();
+    localStorage.clear();
     },[]);
 
 
-    const ProceedLoginusingAPI = (e) => {
+    const {error} = useSelector((state)=>state.user)
+
+    const dispatch = useDispatch();
+    const handlerLogin = (e) =>{
+        e.preventDefault();
+        let userCredentials={
+            username,password
+        }
+        dispatch(loginUser(userCredentials)).then((result)=>{
+            if(result.error ===null ||result.error ===undefined){
+                toast.success('Success');
+                     usernameupdate('');
+                     passwordupdate('');
+                   usenavigate('/profile')
+            }
+            else{
+                console.log(result)
+                toast.error(result.payload);
+            }
+        })
+    }
+
+    /*const ProceedLoginusingAPI = (e) => {
         e.preventDefault();
         if (validate()) {
             ///implentation
@@ -32,8 +56,9 @@ const Login = () => {
                     toast.error('Login failed, invalid credentials');
                 }else{
                      toast.success('Success');
-                     sessionStorage.setItem('email',username);
-                     sessionStorage.setItem('jwttoken',resp.token);
+                     localStorage.setItem('email',username);
+                     localStorage.setItem('password',password);
+                     localStorage.setItem('jwttoken',resp.token);
                    usenavigate('/profile')
                 }
             }).catch((err) => {
@@ -52,11 +77,11 @@ const Login = () => {
             toast.warning('Please Enter Password');
         }
         return result;
-    }
+    }*/
     return (
         <div className="row">
             <div className="offset-lg-3 col-lg-6" style={{ marginTop: '100px' }}>
-                <form onSubmit={ProceedLoginusingAPI} className="container">
+                <form onSubmit={handlerLogin} className="container">
                     <div className="card">
                         <div className="card-header">
                             <h2>User Login</h2>
