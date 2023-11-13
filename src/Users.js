@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import './Users.css';
 
 const User = () => {
     const [custlist, custupdate] = useState([]);
-    const [haveadd, addchange] = useState(true);
-    const [haveremove, removechange] = useState(true);
     const [id, idupdate] = useState('');
     const [first_name, firstnameupdate] = useState('');
     const [last_name, lastnameupdate] = useState('');
     const [email, emailupdate] = useState('');
     const [avatar, avatarupdate] = useState('');
     const [search, searchupdate] = useState('');
-    const [glength, setglength] = useState(0);
     const [col, issortedcol] = useState(null);
     const [sortkey, setsortkey] = useState('');
 
@@ -32,14 +30,13 @@ const User = () => {
         .then(res =>{
             if(localStorage.getItem('users') === null){
                 localStorage.setItem('users', JSON.stringify(res.data))
-                setglength(JSON.parse(localStorage.getItem('users')).length)
             custupdate(res.data)
             }
         })
     }
 
     const handleadd = () => {
-        if(haveadd){
+
         let a = (JSON.parse(localStorage.getItem('users')));
         a.push({
             'id':id,
@@ -49,25 +46,21 @@ const User = () => {
         'avatar':avatar})
         localStorage.setItem('users', JSON.stringify(a))
         custupdate(a)
-        setglength(a.length)
         toast.success('Added')
-        }
     }
 
     const handleremove = (e, i)=> {
         e.preventDefault();
-        if(haveremove){
             let list = (JSON.parse(localStorage.getItem('users')));
             list.filter((a,g)=>{
                 if(i===a.id){
                     list.splice(g,1)
                     localStorage.setItem('users', JSON.stringify(list))
                     custupdate(list)
-                    setglength(list.length)
                     toast.success('Removed')
                 }
+                return(list)
             })
-        }
     }
     const handlesort = (e,v)=>{
         setsortkey(v);
@@ -96,7 +89,9 @@ const User = () => {
     }
 
 
+    console.log(custlist)
     return (
+        
         <div className="container">
 
             <div className="card">
@@ -122,7 +117,7 @@ const User = () => {
                     <br/>
                     <table className="table table-bordered">
                         <thead className="bg-dark text-white">
-                            <tr>
+                            <tr className="sortpoint">
                                 <th>ID</th>
                                 <th onClick={(e) => handlesort(e,'first_name')}>First_Name{sortkey==='first_name'?col!=null ? <span> {col? ' 🔽': '🔼'} </span>: '':''}</th>
                                 <th onClick={(e) => handlesort(e,'last_name')}>Last_Name{sortkey==='last_name'? col!=null ? <span> {col? ' 🔽': '🔼'} </span>: '':''}</th>
@@ -137,7 +132,7 @@ const User = () => {
                                     return search.toLocaleLowerCase() === ''? item:item.first_name.toLocaleLowerCase().includes(search) ||item.last_name.toLocaleLowerCase().includes(search) ||item.email.toLocaleLowerCase().includes(search) 
                                 }).map(item => (
                                     <tr key={item.id}>
-                                        <td onClick={(e)=>handleuser(e,item.id)}>{item.id}</td>
+                                        <td className="profref" onClick={(e)=>handleuser(e,item.id)}>{item.id}</td>
                                         <td>{item.first_name}</td>
                                         <td>{item.last_name}</td>
                                         <td>{item.email}</td>

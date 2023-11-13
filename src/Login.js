@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { loginUser } from "./features/userSlice";
 
 const Login = () => {
@@ -15,7 +15,6 @@ const Login = () => {
     },[]);
 
 
-    const {error} = useSelector((state)=>state.user)
 
     const dispatch = useDispatch();
     const handlerLogin = (e) =>{

@@ -1,0 +1,9 @@
+.sortpoint{
+    cursor: pointer;
+}
+
+.profref{
+    cursor: pointer;
+    text-decoration: underline;
+    color:rgb(0, 157, 255) !important;
+}

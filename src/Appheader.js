@@ -24,7 +24,7 @@ const Appheader = () => {
         }
         }
 
-    }, [location])
+    }, [location, usenavigate])
     return (
         <div>
             {showmenu &&

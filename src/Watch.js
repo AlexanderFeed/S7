@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react"
 import './Watch.css' 
 
- const Watch = () =>{
+const Watch = () =>{
     const gid = parseInt(window.location.href.split('/').at(-1));
     return(
         <div>   
@@ -19,9 +18,5 @@ import './Watch.css'
 
         </div>
     )
-
-
-
-    
 }
 export default Watch
