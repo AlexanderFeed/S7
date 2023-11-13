@@ -10,7 +10,7 @@ const Appheader = () => {
         if (location.pathname === '/login') {
             showmenuupdateupdate(false);
         } else { 
-            if(location.pathname === '/' || location.pathname === '/users'){
+            if(location.pathname !== '/profile'){
             showmenuupdateupdate(true);
             }
             else{

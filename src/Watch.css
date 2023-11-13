@@ -1,0 +1,12 @@
+.watch{
+    width: 100%;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    overflow: auto;
+    flex-direction: column;
+}
+.info{
+    font-weight: 1000;
+    display: flex;
+}

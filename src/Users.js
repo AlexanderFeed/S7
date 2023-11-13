@@ -13,7 +13,8 @@ const User = () => {
     const [avatar, avatarupdate] = useState('');
     const [search, searchupdate] = useState('');
     const [glength, setglength] = useState(0);
-    const [col, issortedcol] = useState(true);
+    const [col, issortedcol] = useState(null);
+    const [sortkey, setsortkey] = useState('');
 
 
     const navigate=useNavigate();
@@ -69,7 +70,7 @@ const User = () => {
         }
     }
     const handlesort = (e,v)=>{
-        
+        setsortkey(v);
         let list = (JSON.parse(localStorage.getItem('users')));
         if(!col){
             const finish = list.sort((a,b)=>{ 
@@ -87,6 +88,11 @@ const User = () => {
 
             issortedcol(false)
         }
+    }
+
+    const handleuser = (e,id) =>{
+        e.preventDefault()
+        navigate('./'+id)
     }
 
 
@@ -118,9 +124,9 @@ const User = () => {
                         <thead className="bg-dark text-white">
                             <tr>
                                 <th>ID</th>
-                                <th onClick={(e) => handlesort(e,'first_name')}>First_Name</th>
-                                <th onClick={(e) => handlesort(e,'last_name')}>Last_Name</th>
-                                <th onClick={(e) => handlesort(e,'email')}>Email</th>
+                                <th onClick={(e) => handlesort(e,'first_name')}>First_Name{sortkey==='first_name'?col!=null ? <span> {col? ' 🔽': '🔼'} </span>: '':''}</th>
+                                <th onClick={(e) => handlesort(e,'last_name')}>Last_Name{sortkey==='last_name'? col!=null ? <span> {col? ' 🔽': '🔼'} </span>: '':''}</th>
+                                <th onClick={(e) => handlesort(e,'email')}>Email{sortkey==='email'? col!=null ? <span> {col? ' 🔽': '🔼'} </span>: '': ''}</th>
                                 <th>Avatar</th>
                                 <th>Action</th>
                             </tr>
@@ -131,7 +137,7 @@ const User = () => {
                                     return search.toLocaleLowerCase() === ''? item:item.first_name.toLocaleLowerCase().includes(search) ||item.last_name.toLocaleLowerCase().includes(search) ||item.email.toLocaleLowerCase().includes(search) 
                                 }).map(item => (
                                     <tr key={item.id}>
-                                        <td>{item.id}</td>
+                                        <td onClick={(e)=>handleuser(e,item.id)}>{item.id}</td>
                                         <td>{item.first_name}</td>
                                         <td>{item.last_name}</td>
                                         <td>{item.email}</td>
