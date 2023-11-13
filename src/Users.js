@@ -72,17 +72,21 @@ const User = () => {
         
         let list = (JSON.parse(localStorage.getItem('users')));
         if(!col){
+            const finish = list.sort((a,b)=>{ 
+                 return a[v].toLocaleLowerCase() > b[v].toLocaleLowerCase()? 1 : -1
+            })
+            localStorage.setItem('users', JSON.stringify(finish))
             issortedcol(true)
-            list.sort((a,b)=>{ 
-                let f = v
-                return a.f - b.f})
         }
-        else {list.sort((a,b)=>{
-            let f = v
-            console.log(a.f)
-            return b.f - a.f}) 
-        issortedcol(false)}
-        localStorage.setItem('users', JSON.stringify(list))
+        else{
+
+            const finish = list.sort((a,b)=>{ 
+                 return a[v].toLocaleLowerCase() < b[v].toLocaleLowerCase()? 1 : -1
+            })
+            localStorage.setItem('users', JSON.stringify(finish))
+
+            issortedcol(false)
+        }
     }
 
 
@@ -113,10 +117,10 @@ const User = () => {
                     <table className="table table-bordered">
                         <thead className="bg-dark text-white">
                             <tr>
-                                <th onClick={(e) => handlesort(e,id)}>ID</th>
-                                <th onClick={(e) => handlesort(e,first_name)}>First_Name</th>
-                                <th onClick={(e) => handlesort(e,last_name)}>Last_Name</th>
-                                <th onClick={(e) => handlesort(e,email)}>Email</th>
+                                <th>ID</th>
+                                <th onClick={(e) => handlesort(e,'first_name')}>First_Name</th>
+                                <th onClick={(e) => handlesort(e,'last_name')}>Last_Name</th>
+                                <th onClick={(e) => handlesort(e,'email')}>Email</th>
                                 <th>Avatar</th>
                                 <th>Action</th>
                             </tr>
