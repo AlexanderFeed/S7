@@ -28,7 +28,7 @@ const User = () => {
             return res.json();
         })
         .then(res =>{
-            if(localStorage.getItem('users') === null){
+            if(localStorage.getItem('users') === null || localStorage.getItem('users') === '[]'){
                 localStorage.setItem('users', JSON.stringify(res.data))
             custupdate(res.data)
             }

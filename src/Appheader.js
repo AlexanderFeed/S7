@@ -32,7 +32,7 @@ const Appheader = () => {
 
                     <Link to={'/'}>Home</Link>
                     <Link to={'/users'}>Users</Link>
-                    <Link to={'/profile'} style={{ marginLeft: '70%' }}><b>{displayusername}</b></Link>
+                    <Link to={'/profile'} style={{ marginLeft: '70%' }}>Profile <b>{displayusername}</b></Link>
                     <Link style={{ float: 'right' }} to={'/login'}>Logout</Link>
                 </div>
             }
