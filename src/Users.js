@@ -11,6 +11,10 @@ const User = () => {
     const [last_name, lastnameupdate] = useState('');
     const [email, emailupdate] = useState('');
     const [avatar, avatarupdate] = useState('');
+    const [search, searchupdate] = useState('');
+    const [glength, setglength] = useState(0);
+    const [col, issortedcol] = useState(true);
+
 
     const navigate=useNavigate();
 
@@ -27,6 +31,7 @@ const User = () => {
         .then(res =>{
             if(localStorage.getItem('users') === null){
                 localStorage.setItem('users', JSON.stringify(res.data))
+                setglength(JSON.parse(localStorage.getItem('users')).length)
             custupdate(res.data)
             }
         })
@@ -43,6 +48,7 @@ const User = () => {
         'avatar':avatar})
         localStorage.setItem('users', JSON.stringify(a))
         custupdate(a)
+        setglength(a.length)
         toast.success('Added')
         }
     }
@@ -56,10 +62,18 @@ const User = () => {
                     list.splice(g,1)
                     localStorage.setItem('users', JSON.stringify(list))
                     custupdate(list)
+                    setglength(list.length)
                     toast.success('Removed')
                 }
             })
         }
+    }
+    const handlesort = ()=>{
+        let list = (JSON.parse(localStorage.getItem('users')));
+        if(!col)
+            list.sort((a,b)=>{return a.id - b.id})
+        else list.sort((a,b)=>{return b.id - a.id})
+        localStorage.setItem('users', JSON.stringify(list))
     }
 
 
@@ -82,11 +96,15 @@ const User = () => {
                 <label>Avatar(URL)</label>
                 <input value={avatar} onChange={e => avatarupdate(e.target.value)} className="form-control"></input>
                     <button onClick={handleadd} className="btn btn-success">Add (+)</button>
-                    <br></br>
+                    <br/>
+                    <br/>
+                    <label>Search Bar</label>
+                    <input value={search} onChange={e => searchupdate(e.target.value) } className="form-control"></input>
+                    <br/>
                     <table className="table table-bordered">
                         <thead className="bg-dark text-white">
                             <tr>
-                                <th>ID</th>
+                                <th onClick={handlesort}>ID</th>
                                 <th>First_Name</th>
                                 <th>Last_Name</th>
                                 <th>Email</th>
@@ -96,7 +114,9 @@ const User = () => {
                         </thead>
                         <tbody>
                             {localStorage.getItem('users') &&
-                                JSON.parse(localStorage.getItem('users')).map(item => (
+                                JSON.parse(localStorage.getItem('users')).filter((item)=>{
+                                    return search.toLocaleLowerCase() === ''? item:item.first_name.toLocaleLowerCase().includes(search) ||item.last_name.toLocaleLowerCase().includes(search) ||item.email.toLocaleLowerCase().includes(search) 
+                                }).map(item => (
                                     <tr key={item.id}>
                                         <td>{item.id}</td>
                                         <td>{item.first_name}</td>
